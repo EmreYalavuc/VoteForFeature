@@ -15,9 +15,9 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group relative flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-2xl hover:shadow-violet-900/10"
+      className="samsung-card group relative flex flex-col p-5"
     >
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600/0 to-purple-600/0 opacity-0 group-hover:from-violet-600/5 group-hover:to-purple-600/5 group-hover:opacity-100 transition-all duration-300 pointer-events-none" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-700/0 to-violet-900/0 opacity-0 group-hover:from-violet-700/5 group-hover:to-violet-900/5 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
 
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white text-lg font-bold shadow-lg shadow-violet-900/40">

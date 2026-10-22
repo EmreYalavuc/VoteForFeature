@@ -48,22 +48,25 @@ export default async function HomePage({ searchParams }: Props) {
   return (
     <div>
       {/* Hero */}
-      <div className="mb-12 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-400 mb-5">
+      <div className="mb-14 text-center">
+        <div className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-violet-600/25 bg-violet-700/10 px-4 py-1.5 text-xs font-semibold text-violet-300 mb-6 tracking-widest uppercase">
           <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
-          Topluluk tabanlı ürün geri bildirimi
+          Topluluk Platformu
         </div>
-        <h1 className="text-5xl font-bold tracking-tight text-zinc-50 mb-4">
+        <h1 className="animate-fade-up-delay-1 text-5xl sm:text-6xl font-extrabold tracking-tight text-zinc-50 mb-5 leading-[1.1]">
           Bir site{" "}
-          <span className="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
-            araştır
-          </span>
-          , topluluğa katıl
+          <span className="galaxy-gradient">araştır</span>
+          ,{" "}
+          <br className="hidden sm:block" />
+          topluluğa katıl
         </h1>
-        <p className="text-lg text-zinc-400 max-w-xl mx-auto mb-8">
-          Herhangi bir sitenin URL'sini gir — aynı domain için yapılan tüm istekler ve yorumlar tek bir topluluk havuzunda buluşur.
+        <p className="animate-fade-up-delay-2 text-lg text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed font-light">
+          Herhangi bir sitenin URL&apos;sini gir — aynı domain için yapılan tüm
+          istekler ve yorumlar tek bir topluluk havuzunda buluşur.
         </p>
-        <UrlBar />
+        <div className="animate-fade-up-delay-3">
+          <UrlBar />
+        </div>
       </div>
 
       {/* Category filters */}

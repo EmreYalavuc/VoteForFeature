@@ -1,41 +1,51 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  /* Outfit (Samsung Sharp Sans alternifi) */
+  --font-sans: var(--font-outfit), system-ui, -apple-system, sans-serif;
 
-  /* Sedef beyaz-gri-siyah-lacivert paleti */
+  /* ─────────────────────────────────────────
+     RENK PALETİ: Sedef Beyaz · Gri · Siyah · Lacivert
+     Samsung Blue (#1428A0) = Lacivert
+     ───────────────────────────────────────── */
 
-  /* zinc → lacivert-siyah tonu (tüm bg/border/text sınıfları otomatik güncellenir) */
-  --color-zinc-950: #060810;
-  --color-zinc-900: #0b0e1a;
-  --color-zinc-800: #141b2e;
-  --color-zinc-700: #1e2a45;
-  --color-zinc-600: #2d3f63;
-  --color-zinc-500: #4a6080;
-  --color-zinc-400: #7a9ab8;
-  --color-zinc-300: #a3bcce;
-  --color-zinc-200: #c8dae6;
-  --color-zinc-100: #dde9f2;
-  --color-zinc-50:  #eef4f8;
+  /* zinc → lacivert-siyah altyapı */
+  --color-zinc-950: #040508;
+  --color-zinc-900: #08090f;
+  --color-zinc-800: #10141f;
+  --color-zinc-700: #1a2138;
+  --color-zinc-600: #273250;
+  --color-zinc-500: #3d4f70;
+  --color-zinc-400: #6a88b0;
+  --color-zinc-300: #9ab4cc;
+  --color-zinc-200: #c2d5e5;
+  --color-zinc-100: #dce9f2;
+  --color-zinc-50:  #eef4f9; /* sedef beyaz */
 
-  /* violet → lacivert (tüm violet-* sınıfları otomatik güncellenir) */
-  --color-violet-950: #03081e;
-  --color-violet-900: #071030;
-  --color-violet-800: #0f2060;
-  --color-violet-700: #1a3480;
-  --color-violet-600: #1d4ed8;
-  --color-violet-500: #2563eb;
-  --color-violet-400: #60a5fa;
+  /* violet → Samsung Blue lacivert skalası */
+  --color-violet-950: #030818;
+  --color-violet-900: #080f30;
+  --color-violet-800: #0d1a58;
+  --color-violet-700: #1428a0; /* Samsung Blue */
+  --color-violet-600: #1a38b4;
+  --color-violet-500: #006bea; /* Samsung Bright Blue */
+  --color-violet-400: #4a90f0;
   --color-violet-300: #93c5fd;
   --color-violet-200: #bfdbfe;
   --color-violet-100: #dbeafe;
   --color-violet-50:  #eff6ff;
 
-  /* purple → aynı lacivert skalası */
-  --color-purple-600: #1e40af;
-  --color-purple-500: #2563eb;
-  --color-purple-400: #60a5fa;
-  --color-purple-300: #93c5fd;
+  /* purple → Galaxy gradient tonu */
+  --color-purple-700: #1428a0;
+  --color-purple-600: #3b57fe;
+  --color-purple-500: #6a6afa;
+  --color-purple-400: #9a9af8; /* Galaxy gradient başlangıcı */
+  --color-purple-300: #c4c4fb;
+}
+
+/* Samsung Premium Easing */
+:root {
+  --ease-samsung: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 * {
@@ -45,30 +55,110 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
   background: #060810;
-  color: #eef4f8;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  color: #eef4f9;
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: 0.01em;
 }
 
+/* ─── Samsung Scroll Animasyonu ─── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.7s var(--ease-samsung) forwards;
+}
+
+.animate-fade-up-delay-1 {
+  animation: fadeUp 0.7s var(--ease-samsung) 0.1s forwards;
+  opacity: 0;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fadeUp 0.7s var(--ease-samsung) 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-up-delay-3 {
+  animation: fadeUp 0.7s var(--ease-samsung) 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s var(--ease-samsung) forwards;
+}
+
+/* ─── Galaxy Gradient ─── */
+.galaxy-gradient {
+  background: linear-gradient(135deg, #9a9af8 0%, #6a6afa 30%, #3b57fe 70%, #1428a0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Samsung Card Style ─── */
+.samsung-card {
+  background: #0d1020;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  transition: border-color 0.3s var(--ease-samsung),
+              box-shadow 0.3s var(--ease-samsung),
+              transform 0.2s var(--ease-samsung);
+}
+
+.samsung-card:hover {
+  border-color: rgba(26, 56, 180, 0.4);
+  box-shadow: 0 8px 40px rgba(20, 40, 160, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ─── Selection ─── */
 ::selection {
-  background: #1d4ed840;
-  color: #bfdbfe;
+  background: #1428a040;
+  color: #93c5fd;
 }
 
+/* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0e1a;
+  background: #08090f;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e2a45;
+  background: #1a2138;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d3f63;
+  background: #1428a0;
 }

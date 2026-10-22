@@ -35,7 +35,7 @@ export function UrlBar() {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <form onSubmit={submit}>
-        <div className="group relative flex items-center gap-0 rounded-full border border-white/10 bg-[#0d1020] p-1.5 shadow-2xl shadow-black/60 transition-all duration-300 focus-within:border-violet-700/60 focus-within:shadow-violet-900/20">
+        <div className="group relative flex items-center gap-0 rounded-full border border-white/10 bg-[#141b2e] p-1.5 shadow-2xl shadow-black/60 transition-all duration-300 focus-within:border-violet-700/60 focus-within:shadow-violet-900/20">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center text-zinc-600 group-focus-within:text-violet-400 transition-colors duration-300">
             <Search className="h-4 w-4" />
           </div>

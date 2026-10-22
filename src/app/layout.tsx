@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" className={outfit.variable}>
       <body>
         <SessionProvider>
-          <div className="min-h-screen bg-[#060810]">
+          <div className="min-h-screen bg-[#0d1117]">
             <Navbar />
             <main className="mx-auto max-w-6xl px-4 py-10">{children}</main>
           </div>

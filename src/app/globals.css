@@ -10,14 +10,14 @@
      ───────────────────────────────────────── */
 
   /* zinc → lacivert-siyah altyapı */
-  --color-zinc-950: #040508;
-  --color-zinc-900: #08090f;
-  --color-zinc-800: #10141f;
-  --color-zinc-700: #1a2138;
-  --color-zinc-600: #273250;
-  --color-zinc-500: #3d4f70;
-  --color-zinc-400: #6a88b0;
-  --color-zinc-300: #9ab4cc;
+  --color-zinc-950: #0d1117;
+  --color-zinc-900: #141b2e;
+  --color-zinc-800: #1e2a40;
+  --color-zinc-700: #28395a;
+  --color-zinc-600: #3a5070;
+  --color-zinc-500: #5070a0;
+  --color-zinc-400: #7a9ab8;
+  --color-zinc-300: #a3bcce;
   --color-zinc-200: #c2d5e5;
   --color-zinc-100: #dce9f2;
   --color-zinc-50:  #eef4f9; /* sedef beyaz */
@@ -59,7 +59,7 @@ html {
 }
 
 body {
-  background: #060810;
+  background: #0d1117;
   color: #eef4f9;
   font-family: var(--font-outfit), system-ui, sans-serif;
   font-feature-settings: "kern" 1, "liga" 1;
@@ -127,7 +127,7 @@ body {
 
 /* ─── Samsung Card Style ─── */
 .samsung-card {
-  background: #0d1020;
+  background: #141b2e;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 16px;
   transition: border-color 0.3s var(--ease-samsung),

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/navbar";
+import { SplashWrapper } from "@/components/layout/splash-wrapper";
 import { SessionProvider } from "next-auth/react";
 
 const outfit = Outfit({
@@ -21,10 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" className={outfit.variable}>
       <body>
         <SessionProvider>
-          <div className="min-h-screen bg-[#0d1117]">
-            <Navbar />
-            <main className="mx-auto max-w-6xl px-4 py-10">{children}</main>
-          </div>
+          <SplashWrapper>
+            <div className="min-h-screen bg-[#0d1117]">
+              <Navbar />
+              <main className="mx-auto max-w-6xl px-4 py-10">{children}</main>
+            </div>
+          </SplashWrapper>
         </SessionProvider>
       </body>
     </html>

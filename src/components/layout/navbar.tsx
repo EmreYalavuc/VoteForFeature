@@ -3,7 +3,7 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Zap } from "lucide-react";
+import { Zap, User, LayoutDashboard, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Navbar() {
@@ -67,19 +67,24 @@ export function Navbar() {
                     <p className="text-xs text-zinc-500 truncate mt-0.5">{session.user?.email}</p>
                   </div>
                   <Link href={`/profile/${session.user?.id}`}
-                    className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
+                    className="flex items-center gap-2.5 px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
                     onClick={() => setMenuOpen(false)}>
+                    <User className="h-4 w-4 text-zinc-500 shrink-0" />
                     Profilim
                   </Link>
                   <Link href="/dashboard"
-                    className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
+                    className="flex items-center gap-2.5 px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
                     onClick={() => setMenuOpen(false)}>
+                    <LayoutDashboard className="h-4 w-4 text-zinc-500 shrink-0" />
                     Dashboard
                   </Link>
-                  <button onClick={() => { setMenuOpen(false); signOut(); }}
-                    className="flex w-full items-center px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 hover:text-red-400 transition-colors duration-150">
-                    Çıkış yap
-                  </button>
+                  <div className="border-t border-white/6 mt-1 pt-1">
+                    <button onClick={() => { setMenuOpen(false); signOut(); }}
+                      className="flex w-full items-center gap-2.5 px-4 py-2 text-sm text-zinc-400 hover:bg-white/5 hover:text-red-400 transition-colors duration-150">
+                      <LogOut className="h-4 w-4 shrink-0" />
+                      Çıkış yap
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

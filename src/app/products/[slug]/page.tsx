@@ -28,7 +28,11 @@ export default async function ProductPage({ params, searchParams }: Props) {
     include: {
       owner: { select: { id: true, name: true, image: true } },
       reviews: {
-        include: { author: { select: { id: true, name: true, image: true } } },
+        include: {
+          author: { select: { id: true, name: true, image: true } },
+          likes: true,
+          unlocks: true,
+        },
         orderBy: { createdAt: "desc" },
       },
     },
@@ -67,6 +71,26 @@ export default async function ProductPage({ params, searchParams }: Props) {
 
   const pinnedFeatures = withMeta.filter((f) => f.pinned);
   const normalFeatures = withMeta.filter((f) => !f.pinned);
+
+  // Build per-author rank stats: likes received, dislikes received, total reviews written
+  const authorIds = [...new Set(product.reviews.map((r) => r.authorId))];
+  const authorStatsMap: Record<string, { likes: number; dislikes: number; reviewCount: number }> = {};
+  await Promise.all(
+    authorIds.map(async (authorId) => {
+      const [reviewCount, likeRows] = await Promise.all([
+        prisma.review.count({ where: { authorId } }),
+        prisma.reviewLike.findMany({
+          where: { review: { authorId } },
+          select: { type: true },
+        }),
+      ]);
+      authorStatsMap[authorId] = {
+        likes: likeRows.filter((l) => l.type === "LIKE").length,
+        dislikes: likeRows.filter((l) => l.type === "DISLIKE").length,
+        reviewCount,
+      };
+    })
+  );
 
   const avgRating = product.reviews.length
     ? product.reviews.reduce((s, r) => s + r.rating, 0) / product.reviews.length
@@ -186,6 +210,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
         productSlug={slug}
         reviews={product.reviews as ReviewWithAuthor[]}
         isOwner={isOwner}
+        authorStatsMap={authorStatsMap}
       />
     </div>
   );

@@ -12,6 +12,7 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  bio           String?
   role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -23,6 +24,8 @@ model User {
   votes           Vote[]
   comments        Comment[]
   reviews         Review[]
+  reviewLikes     ReviewLike[]
+  reviewUnlocks   ReviewUnlock[]
 }
 
 model Account {
@@ -93,8 +96,35 @@ model Review {
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   author  User    @relation(fields: [authorId], references: [id])
+  likes   ReviewLike[]
+  unlocks ReviewUnlock[]
 
   @@unique([productId, authorId])
+}
+
+model ReviewLike {
+  id        String   @id @default(cuid())
+  type      LikeType
+  createdAt DateTime @default(now())
+  reviewId  String
+  userId    String
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+}
+
+model ReviewUnlock {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  reviewId  String
+  userId    String
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
 }
 
 model FeatureRequest {
@@ -167,4 +197,9 @@ enum FeatureStatus {
 enum VoteType {
   UP
   DOWN
+}
+
+enum LikeType {
+  LIKE
+  DISLIKE
 }

@@ -1,4 +1,4 @@
-import { FeatureRequest, User, Vote, Comment, Product, FeatureStatus, Review, ProductCategory } from "@prisma/client";
+import { FeatureRequest, User, Vote, Comment, Product, FeatureStatus, Review, ProductCategory, ReviewLike, ReviewUnlock } from "@prisma/client";
 
 export type ProductWithMeta = Product & {
   owner: Pick<User, "id" | "name" | "image">;
@@ -12,6 +12,8 @@ export type ProductWithReviews = ProductWithMeta & {
 
 export type ReviewWithAuthor = Review & {
   author: Pick<User, "id" | "name" | "image">;
+  likes: ReviewLike[];
+  unlocks: ReviewUnlock[];
 };
 
 export type FeatureWithMeta = FeatureRequest & {
@@ -37,3 +39,4 @@ export type FilterOptions = {
 };
 
 export { FeatureStatus, ProductCategory };
+export type { ReviewLike, ReviewUnlock };

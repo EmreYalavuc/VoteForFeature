@@ -66,6 +66,11 @@ export function Navbar() {
                     <p className="text-xs font-semibold text-zinc-200 truncate">{session.user?.name}</p>
                     <p className="text-xs text-zinc-500 truncate mt-0.5">{session.user?.email}</p>
                   </div>
+                  <Link href={`/profile/${session.user?.id}`}
+                    className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
+                    onClick={() => setMenuOpen(false)}>
+                    Profilim
+                  </Link>
                   <Link href="/dashboard"
                     className="flex items-center px-4 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition-colors duration-150"
                     onClick={() => setMenuOpen(false)}>

@@ -58,6 +58,24 @@ export const FEATURE_CATEGORIES = [
 
 export const CATEGORIES = FEATURE_CATEGORIES;
 
+export type Rank = {
+  label: string;
+  emoji: string;
+  color: string; // tailwind text color class
+  bg: string;    // tailwind bg class
+  score: number;
+  next: number | null;
+};
+
+export function calculateRank(stats: { likes: number; dislikes: number; reviewCount: number }): Rank {
+  const score = stats.likes * 3 - stats.dislikes + stats.reviewCount;
+  if (score >= 150) return { label: "Elite",     emoji: "💎", color: "text-purple-300",  bg: "bg-purple-500/15 border-purple-500/30",   score, next: null };
+  if (score >= 75)  return { label: "Expert",    emoji: "🔶", color: "text-amber-300",   bg: "bg-amber-500/15  border-amber-500/30",    score, next: 150 };
+  if (score >= 30)  return { label: "Trusted",   emoji: "🌟", color: "text-violet-300",  bg: "bg-violet-500/15 border-violet-500/30",   score, next: 75 };
+  if (score >= 10)  return { label: "Reviewer",  emoji: "🟢", color: "text-emerald-300", bg: "bg-emerald-500/15 border-emerald-500/30", score, next: 30 };
+  return              { label: "Newcomer",   emoji: "🔵", color: "text-blue-300",    bg: "bg-blue-500/15   border-blue-500/30",    score, next: 10 };
+}
+
 export const PRODUCT_CATEGORIES = [
   { value: "WEB",     label: "Web App",    emoji: "🌐" },
   { value: "MOBILE",  label: "Mobile",     emoji: "📱" },

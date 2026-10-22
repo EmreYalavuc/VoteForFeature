@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Stars } from "@/components/ui/stars";
-import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ReviewCard } from "@/components/products/review-card";
 import { ReviewWithAuthor } from "@/types";
 import { MessageSquare, Star } from "lucide-react";
 
@@ -11,9 +11,10 @@ interface ReviewSectionProps {
   productSlug: string;
   reviews: ReviewWithAuthor[];
   isOwner: boolean;
+  authorStatsMap: Record<string, { likes: number; dislikes: number; reviewCount: number }>;
 }
 
-export function ReviewSection({ productSlug, reviews: initialReviews, isOwner }: ReviewSectionProps) {
+export function ReviewSection({ productSlug, reviews: initialReviews, isOwner, authorStatsMap }: ReviewSectionProps) {
   const { data: session } = useSession();
   const [reviews, setReviews] = useState(initialReviews);
   const [rating, setRating] = useState(0);
@@ -112,21 +113,12 @@ export function ReviewSection({ productSlug, reviews: initialReviews, isOwner }:
       ) : (
         <div className="space-y-3">
           {reviews.map((r) => (
-            <div key={r.id} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Avatar src={r.author.image} name={r.author.name} size="sm" />
-                  <span className="text-sm font-medium text-zinc-300">{r.author.name}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Stars rating={r.rating} />
-                  <span className="text-xs text-zinc-600">
-                    {new Date(r.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                  </span>
-                </div>
-              </div>
-              {r.content && <p className="text-sm text-zinc-400 leading-relaxed">{r.content}</p>}
-            </div>
+            <ReviewCard
+              key={r.id}
+              review={r}
+              isOwner={isOwner}
+              authorStats={authorStatsMap[r.authorId] ?? { likes: 0, dislikes: 0, reviewCount: 0 }}
+            />
           ))}
         </div>
       )}

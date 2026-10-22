@@ -66,8 +66,26 @@ export const PRODUCT_CATEGORIES = [
   { value: "API",     label: "API",        emoji: "⚡" },
   { value: "TOOL",    label: "Tool",       emoji: "🔧" },
   { value: "DEVTOOL", label: "Dev Tool",   emoji: "👨‍💻" },
-  { value: "OTHER",   label: "Other",      emoji: "📦" },
+  { value: "OTHER",   label: "Community",  emoji: "💬" },
 ] as const;
+
+export function extractDomain(url: string): string {
+  try {
+    const u = new URL(url.startsWith("http") ? url : `https://${url}`);
+    return u.hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return url.toLowerCase().replace(/^www\./, "").split("/")[0];
+  }
+}
+
+export function domainToSlug(domain: string): string {
+  return domain.replace(/\./g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function domainToName(domain: string): string {
+  const base = domain.split(".")[0];
+  return base.charAt(0).toUpperCase() + base.slice(1);
+}
 
 export const TECH_STACK_OPTIONS = [
   "Next.js", "React", "Vue", "Angular", "Svelte", "Nuxt",

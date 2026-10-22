@@ -63,11 +63,12 @@ model Product {
   id          String      @id @default(cuid())
   name        String
   slug        String      @unique
+  domain      String?     @unique
   description String
   logo        String?
   website     String?
   demoUrl     String?
-  category    ProductCategory @default(OTHER)
+  category    ProductCategory @default(WEB)
   techStack   String[]
   screenshots String[]
   isPublic    Boolean     @default(true)

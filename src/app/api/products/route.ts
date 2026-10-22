@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { slugify } from "@/lib/utils";
-import { ProductCategory } from "@prisma/client";
-import { z } from "zod";
-
-const createSchema = z.object({
-  name: z.string().min(2).max(60),
-  description: z.string().min(10).max(500),
-  website: z.string().url().optional().or(z.literal("")),
-  demoUrl: z.string().url().optional().or(z.literal("")),
-  category: z.nativeEnum(ProductCategory).default("OTHER"),
-  techStack: z.array(z.string()).max(10).default([]),
-  isPublic: z.boolean().default(true),
-});
+import { extractDomain, domainToSlug, domainToName } from "@/lib/utils";
 
 export async function GET() {
   const products = await prisma.product.findMany({
@@ -29,7 +17,7 @@ export async function GET() {
   const withRating = products.map((p) => ({
     ...p,
     avgRating: p.reviews.length
-      ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length
+      ? p.reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / p.reviews.length
       : null,
     reviews: undefined,
   }));
@@ -42,32 +30,42 @@ export async function POST(req: NextRequest) {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const parsed = createSchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  const { url } = body as { url?: string };
 
-  const { name, description, website, demoUrl, category, techStack, isPublic } = parsed.data;
-  const baseSlug = slugify(name);
-  let slug = baseSlug;
-  let i = 1;
-  while (await prisma.product.findUnique({ where: { slug } })) {
-    slug = `${baseSlug}-${i++}`;
+  if (!url) return NextResponse.json({ error: "url is required" }, { status: 400 });
+
+  const domain = extractDomain(url);
+  if (!domain || domain.length < 3) {
+    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+  }
+
+  const slug = domainToSlug(domain);
+  const name = domainToName(domain);
+  const logo = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
+  const existing = await prisma.product.findFirst({
+    where: { OR: [{ domain }, { slug }] },
+  });
+
+  if (existing) {
+    return NextResponse.json({ slug: existing.slug, existing: true });
   }
 
   const product = await prisma.product.create({
     data: {
-      name, slug, description,
-      website: website || null,
-      demoUrl: demoUrl || null,
-      category,
-      techStack,
-      isPublic,
+      name,
+      slug,
+      domain,
+      description: `Community requests and feedback for ${domain}.`,
+      logo,
+      website: `https://${domain}`,
+      category: "WEB",
+      techStack: [],
+      screenshots: [],
+      isPublic: true,
       ownerId: session.user.id!,
-    },
-    include: {
-      owner: { select: { id: true, name: true, image: true } },
-      _count: { select: { features: true, reviews: true } },
     },
   });
 
-  return NextResponse.json(product, { status: 201 });
+  return NextResponse.json({ slug: product.slug, existing: false }, { status: 201 });
 }

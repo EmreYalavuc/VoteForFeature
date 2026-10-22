@@ -33,7 +33,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           <Link href="/" className="rounded-lg px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-all">
-            Products
+            Araştır
           </Link>
           {session && (
             <Link href="/dashboard" className="rounded-lg px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-all">

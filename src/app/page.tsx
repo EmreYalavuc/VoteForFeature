@@ -1,54 +1,12 @@
-export const dynamic = "force-dynamic";
-
-import { prisma } from "@/lib/prisma";
-import { ProductCard } from "@/components/products/product-card";
-import { NewProductButton } from "@/components/products/new-product-button";
-import { CategoryFilter } from "@/components/products/category-filter";
+import Link from "next/link";
 import { UrlBar } from "@/components/products/url-bar";
-import { ProductWithMeta } from "@/types";
-import { PRODUCT_CATEGORIES } from "@/lib/utils";
+import { Users, ArrowRight, Zap, MessageSquare } from "lucide-react";
 
-interface Props {
-  searchParams: Promise<{ category?: string }>;
-}
-
-export default async function HomePage({ searchParams }: Props) {
-  const sp = await searchParams;
-  const category = sp.category && sp.category !== "all" ? sp.category : undefined;
-
-  const products = await prisma.product.findMany({
-    where: { isPublic: true, ...(category ? { category: category as never } : {}) },
-    include: {
-      owner: { select: { id: true, name: true, image: true } },
-      _count: { select: { features: true, reviews: true } },
-      reviews: { select: { rating: true } },
-    },
-    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
-  });
-
-  const withRating: ProductWithMeta[] = products.map((p) => ({
-    ...p,
-    avgRating: p.reviews.length
-      ? p.reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / p.reviews.length
-      : undefined,
-    reviews: undefined as never,
-  }));
-
-  const featured = withRating.filter((p) => p.featured);
-  const rest = withRating.filter((p) => !p.featured);
-
-  const counts = await prisma.product.groupBy({
-    by: ["category"],
-    where: { isPublic: true },
-    _count: true,
-  });
-  const categoryCounts = Object.fromEntries(counts.map((c) => [c.category, c._count]));
-  const totalCount = counts.reduce((s, c) => s + c._count, 0);
-
+export default function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <div className="mb-14 text-center">
+      <div className="mb-20 text-center pt-10">
         <div className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-violet-600/25 bg-violet-700/10 px-4 py-1.5 text-xs font-semibold text-violet-300 mb-6 tracking-widest uppercase">
           <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
           Topluluk Platformu
@@ -69,47 +27,54 @@ export default async function HomePage({ searchParams }: Props) {
         </div>
       </div>
 
-      {/* Category filters */}
-      <CategoryFilter
-        categories={PRODUCT_CATEGORIES}
-        counts={categoryCounts}
-        totalCount={totalCount}
-        activeCategory={sp.category ?? "all"}
-      />
+      {/* Divider */}
+      <div className="border-t border-white/5 mb-16" />
 
-      {/* Featured */}
-      {!category && featured.length > 0 && (
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">⭐ Öne Çıkan</span>
+      {/* Feature cards */}
+      <div className="grid gap-4 sm:grid-cols-3 mb-16">
+        {[
+          {
+            icon: Zap,
+            title: "Araştır",
+            desc: "Bir sitenin URL'sini gir, o siteye ait tüm topluluğa ulaş.",
+          },
+          {
+            icon: MessageSquare,
+            title: "İstek Bırak",
+            desc: "Feature request ekle, oyla, yorum yap — herkesin gördüğü ortak havuz.",
+          },
+          {
+            icon: Users,
+            title: "Community",
+            desc: "Geliştiriciler kendi uygulamalarını listeler, topluluk test eder ve geri bildirim verir.",
+          },
+        ].map((f, i) => (
+          <div
+            key={f.title}
+            className={`samsung-card p-6 animate-fade-up-delay-${i + 1}`}
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-700/20 mb-4">
+              <f.icon className="h-5 w-5 text-violet-400" />
+            </div>
+            <h3 className="font-bold text-zinc-100 mb-2 text-lg">{f.title}</h3>
+            <p className="text-sm text-zinc-500 leading-relaxed">{f.desc}</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((p) => <ProductCard key={p.id} product={p} />)}
-          </div>
-        </div>
-      )}
-
-      {/* All / filtered */}
-      <div className="mb-5 flex items-center justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-zinc-100">
-            {category ? (PRODUCT_CATEGORIES.find((c) => c.value === category)?.label ?? "Siteler") : "Tüm siteler"}
-          </h2>
-          <p className="text-sm text-zinc-500">{rest.length} site topluluk alanı</p>
-        </div>
-        <NewProductButton />
+        ))}
       </div>
 
-      {rest.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-zinc-800 py-20 text-center">
-          <p className="text-zinc-500 mb-3">Bu kategoride henüz site yok.</p>
-          <p className="text-sm text-zinc-600">İlk URL'yi ekleyen sen ol!</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {rest.map((p) => <ProductCard key={p.id} product={p} />)}
-        </div>
-      )}
+      {/* Community CTA */}
+      <div className="rounded-2xl border border-white/6 bg-gradient-to-br from-violet-700/10 to-[#060810] p-8 text-center">
+        <h2 className="text-2xl font-bold text-zinc-100 mb-2">Uygulamanı topluluğa sun</h2>
+        <p className="text-zinc-400 mb-6 max-w-md mx-auto text-sm leading-relaxed">
+          Geliştirdiğin siteyi veya uygulamayı community ekranına ekle. Diğer geliştiriciler denesin, yorum bıraksın.
+        </p>
+        <Link
+          href="/community"
+          className="inline-flex items-center gap-2 rounded-full bg-violet-700 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-900/30 transition-all hover:bg-violet-500 hover:-translate-y-px"
+        >
+          Community&apos;ye Git <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
     </div>
   );
 }

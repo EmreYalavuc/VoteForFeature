@@ -30,39 +30,47 @@ export async function POST(req: NextRequest) {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { url } = body as { url?: string };
+  const { url, listInCommunity = false } = body as { url?: string; listInCommunity?: boolean };
 
-  if (!url) return NextResponse.json({ error: "url is required" }, { status: 400 });
+  if (!url) return NextResponse.json({ error: "url gerekli" }, { status: 400 });
 
   const domain = extractDomain(url);
   if (!domain || domain.length < 3) {
-    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
+    return NextResponse.json({ error: "Geçersiz URL" }, { status: 400 });
   }
 
   const slug = domainToSlug(domain);
   const name = domainToName(domain);
   const logo = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
+  // Zaten varsa: eğer listInCommunity true ise ve sahibiyse isPublic'i güncelle
   const existing = await prisma.product.findFirst({
     where: { OR: [{ domain }, { slug }] },
   });
 
   if (existing) {
+    if (listInCommunity && existing.ownerId === session.user.id && !existing.isPublic) {
+      await prisma.product.update({
+        where: { id: existing.id },
+        data: { isPublic: true },
+      });
+    }
     return NextResponse.json({ slug: existing.slug, existing: true });
   }
 
+  // isPublic: sadece developer bilinçli olarak community'ye eklemek isterse true
   const product = await prisma.product.create({
     data: {
       name,
       slug,
       domain,
-      description: `Community requests and feedback for ${domain}.`,
+      description: `${name} hakkında community talepleri ve geri bildirimleri.`,
       logo,
       website: `https://${domain}`,
       category: "WEB",
       techStack: [],
       screenshots: [],
-      isPublic: true,
+      isPublic: Boolean(listInCommunity),
       ownerId: session.user.id!,
     },
   });

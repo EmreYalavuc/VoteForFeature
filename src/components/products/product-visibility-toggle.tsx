@@ -32,14 +32,16 @@ export function ProductVisibilityToggle({ slug, isPublic: initialPublic }: Props
 
   return (
     <button onClick={toggle} disabled={loading}
-      title={isPublic ? "Unlist app from showcase" : "Publish app to showcase"}
-      className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs transition-colors disabled:opacity-50 ${
+      title={isPublic ? "Community'den kaldır" : "Community'ye ekle"}
+      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-50 ${
         isPublic
           ? "border-zinc-700 text-zinc-400 hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-400"
-          : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/15"
+          : "border-violet-700/40 bg-violet-700/10 text-violet-400 hover:bg-violet-700/20"
       }`}>
-      {isPublic ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-      {isPublic ? "Unlist" : "Publish"}
+      {isPublic
+        ? <><EyeOff className="h-3.5 w-3.5" /> Community&apos;den Kaldır</>
+        : <><Eye className="h-3.5 w-3.5" /> Community&apos;ye Ekle</>
+      }
     </button>
   );
 }

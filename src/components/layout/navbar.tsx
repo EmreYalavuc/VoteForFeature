@@ -36,6 +36,10 @@ export function Navbar() {
             className="rounded-full px-4 py-1.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 tracking-wide">
             Araştır
           </Link>
+          <Link href="/community"
+            className="rounded-full px-4 py-1.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 tracking-wide">
+            Community
+          </Link>
           {session && (
             <Link href="/dashboard"
               className="rounded-full px-4 py-1.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all duration-200 tracking-wide">

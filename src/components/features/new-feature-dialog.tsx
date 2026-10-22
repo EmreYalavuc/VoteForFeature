@@ -96,7 +96,7 @@ export function NewFeatureDialog({ productId }: NewFeatureDialogProps) {
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                   className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3.5 py-2.5 text-sm text-zinc-100 outline-none focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/30 transition-colors"
                 >
-                  {CATEGORIES.map((c) => (
+                  {CATEGORIES.map((c: string) => (
                     <option key={c} value={c} className="bg-zinc-900">{c}</option>
                   ))}
                 </select>

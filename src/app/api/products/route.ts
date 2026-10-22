@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
+import { ProductCategory } from "@prisma/client";
 import { z } from "zod";
 
 const createSchema = z.object({
   name: z.string().min(2).max(60),
-  description: z.string().min(10).max(300),
+  description: z.string().min(10).max(500),
   website: z.string().url().optional().or(z.literal("")),
+  demoUrl: z.string().url().optional().or(z.literal("")),
+  category: z.nativeEnum(ProductCategory).default("OTHER"),
+  techStack: z.array(z.string()).max(10).default([]),
   isPublic: z.boolean().default(true),
 });
 
@@ -16,11 +20,21 @@ export async function GET() {
     where: { isPublic: true },
     include: {
       owner: { select: { id: true, name: true, image: true } },
-      _count: { select: { features: true } },
+      _count: { select: { features: true, reviews: true } },
+      reviews: { select: { rating: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
   });
-  return NextResponse.json(products);
+
+  const withRating = products.map((p) => ({
+    ...p,
+    avgRating: p.reviews.length
+      ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length
+      : null,
+    reviews: undefined,
+  }));
+
+  return NextResponse.json(withRating);
 }
 
 export async function POST(req: NextRequest) {
@@ -31,7 +45,7 @@ export async function POST(req: NextRequest) {
   const parsed = createSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 
-  const { name, description, website, isPublic } = parsed.data;
+  const { name, description, website, demoUrl, category, techStack, isPublic } = parsed.data;
   const baseSlug = slugify(name);
   let slug = baseSlug;
   let i = 1;
@@ -40,10 +54,18 @@ export async function POST(req: NextRequest) {
   }
 
   const product = await prisma.product.create({
-    data: { name, slug, description, website: website || null, isPublic, ownerId: session.user.id! },
+    data: {
+      name, slug, description,
+      website: website || null,
+      demoUrl: demoUrl || null,
+      category,
+      techStack,
+      isPublic,
+      ownerId: session.user.id!,
+    },
     include: {
       owner: { select: { id: true, name: true, image: true } },
-      _count: { select: { features: true } },
+      _count: { select: { features: true, reviews: true } },
     },
   });
 

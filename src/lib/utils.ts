@@ -51,13 +51,34 @@ export const STATUS_DOT: Record<FeatureStatus, string> = {
   REJECTED:   "bg-red-400",
 };
 
-export const CATEGORIES = [
-  "general",
-  "ui",
-  "performance",
-  "security",
-  "integrations",
-  "mobile",
-  "api",
-  "docs",
+export const FEATURE_CATEGORIES = [
+  "general", "ui", "performance", "security",
+  "integrations", "mobile", "api", "docs",
+];
+
+export const CATEGORIES = FEATURE_CATEGORIES;
+
+export const PRODUCT_CATEGORIES = [
+  { value: "WEB",     label: "Web App",    emoji: "🌐" },
+  { value: "MOBILE",  label: "Mobile",     emoji: "📱" },
+  { value: "DESKTOP", label: "Desktop",    emoji: "🖥️" },
+  { value: "GAME",    label: "Game",       emoji: "🎮" },
+  { value: "API",     label: "API",        emoji: "⚡" },
+  { value: "TOOL",    label: "Tool",       emoji: "🔧" },
+  { value: "DEVTOOL", label: "Dev Tool",   emoji: "👨‍💻" },
+  { value: "OTHER",   label: "Other",      emoji: "📦" },
+] as const;
+
+export const TECH_STACK_OPTIONS = [
+  "Next.js", "React", "Vue", "Angular", "Svelte", "Nuxt",
+  "Node.js", "Express", "Fastify", "NestJS",
+  "Python", "Django", "FastAPI", "Flask",
+  "Go", "Rust", "Java", "Spring", ".NET",
+  "PostgreSQL", "MySQL", "MongoDB", "SQLite", "Redis",
+  "TypeScript", "JavaScript",
+  "Tailwind", "shadcn/ui",
+  "Docker", "Kubernetes",
+  "AWS", "Vercel", "Supabase",
+  "React Native", "Flutter", "Swift", "Kotlin",
+  "Unity", "Unreal",
 ];

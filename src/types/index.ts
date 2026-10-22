@@ -1,4 +1,18 @@
-import { FeatureRequest, User, Vote, Comment, Product, FeatureStatus } from "@prisma/client";
+import { FeatureRequest, User, Vote, Comment, Product, FeatureStatus, Review, ProductCategory } from "@prisma/client";
+
+export type ProductWithMeta = Product & {
+  owner: Pick<User, "id" | "name" | "image">;
+  _count: { features: number; reviews: number };
+  avgRating?: number;
+};
+
+export type ProductWithReviews = ProductWithMeta & {
+  reviews: ReviewWithAuthor[];
+};
+
+export type ReviewWithAuthor = Review & {
+  author: Pick<User, "id" | "name" | "image">;
+};
 
 export type FeatureWithMeta = FeatureRequest & {
   author: Pick<User, "id" | "name" | "image">;
@@ -8,11 +22,6 @@ export type FeatureWithMeta = FeatureRequest & {
   upvotes: number;
   downvotes: number;
   userVote?: Vote | null;
-};
-
-export type ProductWithMeta = Product & {
-  owner: Pick<User, "id" | "name" | "image">;
-  _count: { features: number };
 };
 
 export type CommentWithAuthor = Comment & {
@@ -27,4 +36,4 @@ export type FilterOptions = {
   sort?: SortOption;
 };
 
-export { FeatureStatus };
+export { FeatureStatus, ProductCategory };

@@ -8,6 +8,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { RankBadge } from "@/components/ui/rank-badge";
 import { Stars } from "@/components/ui/stars";
 import { BioEditor } from "@/components/profile/bio-editor";
+import { AvatarPicker } from "@/components/profile/avatar-picker";
 import { calculateRank, PRODUCT_CATEGORIES } from "@/lib/utils";
 import { Globe, ExternalLink } from "lucide-react";
 
@@ -68,7 +69,11 @@ export default async function ProfilePage({ params }: Props) {
       {/* Profile header */}
       <div className="samsung-card p-6">
         <div className="flex items-start gap-5">
-          <Avatar src={user.image} name={user.name} size="xl" />
+          {isSelf ? (
+            <AvatarPicker userId={id} currentImage={user.image} userName={user.name} />
+          ) : (
+            <Avatar src={user.image} name={user.name} size="xl" />
+          )}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap mb-1">
               <h1 className="text-xl font-bold text-zinc-50">{user.name}</h1>
